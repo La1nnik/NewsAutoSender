@@ -1,5 +1,10 @@
+const { ListModelsResponse } = require("@google/genai");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
+require("dotenv").config();
+
+
 
 function createWindow() {
     const win = new BrowserWindow({
@@ -30,6 +35,23 @@ app.on("window-all-closed", () => {
     // на macOS обычно приложение не закрывается полностью
     if (process.platform !== "darwin") app.quit();
 })
+
+
+const apiKey = process.env.GEMINI_API_KEY;
+
+const genAI = new GoogleGenerativeAI(apiKey);
+
+async function testGemini() {
+
+    const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
+    const result = await model.generateContent("Translate this from Russian to English: ");
+    const response = await result.response;
+    console.log(response.text());
+
+
+}
+testGemini();
+
 
 async function SendPost(payload) {
     // payload = { text, media[], platforms }
