@@ -159,6 +159,11 @@
             transform: translateY(1px);
         }
 
+        .btn:disabled {
+            opacity: .45;
+            pointer-events: none;
+        }
+
         input[type="file"] {
             display: none;
         }
@@ -341,6 +346,7 @@
             object-fit: cover;
             display: block;
             background: #000;
+
         }
     </style>
 </head>
@@ -357,7 +363,12 @@
 
         <div class="card">
             <div class="section">
-                <label for="text">Текст</label>
+                <div style="display: flex;  align-items:center; justify-content: space-between; margin-bottom: 10px;">
+                    <label for="text">Текст</label>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <button class="btn" id="translateBtn">Перевести на англ</button>
+                    </div>
+                </div>
                 <textarea id="text" placeholder="Напиши тут текст..."></textarea>
             </div>
 

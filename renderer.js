@@ -157,6 +157,13 @@ function render() {
     }
 }
 
+var translateBtn = document.getElementById("translateBtn");
+
+translateBtn.addEventListener("click", (e) => {
+    translateBtn.setAttribute("disabled", "disabled");
+
+});
+
 // --- Глобально гасим дефолтное поведение drag&drop (чтобы Electron не открывал файл) ---
 document.addEventListener("dragover", (e) => e.preventDefault());
 document.addEventListener("drop", (e) => e.preventDefault());
