@@ -41,17 +41,17 @@ const apiKey = process.env.GEMINI_API_KEY;
 
 const genAI = new GoogleGenerativeAI(apiKey);
 
-async function testGemini() {
-
+async function Translate(text) {
     const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
-    const result = await model.generateContent("Translate this from Russian to English: ");
+    const result = await model.generateContent("Translate this from Russian to English: " + text);
     const response = await result.response;
-    console.log(response.text());
-
-
 }
-testGemini();
 
+
+ipcMain.handle("translate", async (event, text) => {
+    const translatedText = await Translate(text);
+    return translatedText;
+});
 
 async function SendPost(payload) {
     // payload = { text, media[], platforms }
