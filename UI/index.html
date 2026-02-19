@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Electron UI</title>
+    <style>
+        :root {
+            --bg: #0b0f14;
+            --panel: #111827;
+            --panel2: #0f172a;
+            --border: rgba(255, 255, 255, .08);
+            --text: #e5e7eb;
+            --muted: #9ca3af;
+            --accent: #60a5fa;
+            --danger: #fb7185;
+            --shadow: 0 10px 30px rgba(0, 0, 0, .45);
+            --radius: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: radial-gradient(1200px 800px at 10% 0%, rgba(96, 165, 250, .12), transparent 55%),
+                radial-gradient(900px 600px at 90% 20%, rgba(251, 113, 133, .10), transparent 55%),
+                var(--bg);
+            color: var(--text);
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        }
+
+        .wrap {
+            max-width: 980px;
+            margin: 28px auto;
+            padding: 0 20px 28px;
+        }
+
+        .header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .title {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: .2px;
+            margin: 0;
+        }
+
+        .subtitle {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, .03), rgba(255, 255, 255, .01));
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .section {
+            padding: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .section:first-child {
+            border-top: none;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            letter-spacing: .25px;
+            color: var(--muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 160px;
+            resize: vertical;
+            outline: none;
+            border-radius: 14px;
+            padding: 12px 12px;
+            border: 1px solid var(--border);
+            background: rgba(15, 23, 42, .55);
+            color: var(--text);
+            line-height: 1.45;
+            font-size: 14px;
+        }
+
+        textarea:focus {
+            border-color: rgba(96, 165, 250, .45);
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, .12);
+        }
+
+        .dropZone {
+            border-radius: 14px;
+            border: 1px dashed rgba(255, 255, 255, .18);
+            background: rgba(17, 24, 39, .55);
+            padding: 16px;
+            transition: .15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .dropZone.isOver {
+            border-color: rgba(96, 165, 250, .8);
+            background: rgba(96, 165, 250, .08);
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, .12);
+        }
+
+        .dropText {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .dropText .big {
+            font-weight: 650;
+            font-size: 14px;
+        }
+
+        .dropText .small {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .btn {
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, .04);
+            color: var(--text);
+            padding: 10px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: .15s ease;
+            user-select: none;
+        }
+
+        .btn:hover {
+            border-color: rgba(96, 165, 250, .45);
+            background: rgba(96, 165, 250, .10);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .gallery {
+            margin-top: 14px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 12px;
+        }
+
+        .thumb {
+            position: relative;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background: rgba(15, 23, 42, .5);
+            overflow: hidden;
+        }
+
+        .thumb img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .thumb .meta {
+            padding: 10px 10px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .thumb .name {
+            font-size: 12px;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .thumb .size {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .remove {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 28px;
+            height: 28px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, .14);
+            background: rgba(0, 0, 0, .35);
+            color: white;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            transition: .15s ease;
+        }
+
+        .remove:hover {
+            border-color: rgba(251, 113, 133, .7);
+            background: rgba(251, 113, 133, .14);
+        }
+
+        .hintRow {
+            margin-top: 10px;
+            color: var(--muted);
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .countPill {
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, .03);
+            padding: 6px 10px;
+            border-radius: 999px;
+        }
+
+        .countPill b {
+            color: var(--text);
+        }
+
+        .warn {
+            color: rgba(251, 113, 133, .85);
+        }
+
+        /* --- Publish UI --- */
+        .publishRow {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .toggleBtn {
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, .04);
+            color: var(--text);
+            padding: 10px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: .15s ease;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggleBtn:hover {
+            border-color: rgba(96, 165, 250, .45);
+            background: rgba(96, 165, 250, .10);
+        }
+
+        .toggleBtn.active {
+            border-color: rgba(96, 165, 250, .70);
+            background: rgba(96, 165, 250, .16);
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, .10);
+        }
+
+        .pillDot {
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .25);
+        }
+
+        .toggleBtn.active .pillDot {
+            background: rgba(96, 165, 250, .95);
+        }
+
+        .publishActionRow {
+            margin-top: 14px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .primaryBtn {
+            border: 1px solid rgba(96, 165, 250, .70);
+            background: rgba(96, 165, 250, .18);
+            color: var(--text);
+            padding: 12px 14px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 650;
+            transition: .15s ease;
+            user-select: none;
+        }
+
+        .primaryBtn:hover {
+            background: rgba(96, 165, 250, .26);
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, .10);
+        }
+
+        .primaryBtn:disabled {
+            opacity: .45;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .selectionText {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        /* video preview */
+        .thumb video {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            display: block;
+            background: #000;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="header">
+            <div>
+                <h1 class="title">Заметка + изображения</h1>
+                <p class="subtitle">Пиши текст сверху. Картинки — перетащи в блок ниже.</p>
+            </div>
+            <div class="countPill">Добавлено: <b id="count">0</b></div>
+        </div>
+
+        <div class="card">
+            <div class="section">
+                <label for="text">Текст</label>
+                <textarea id="text" placeholder="Напиши тут текст..."></textarea>
+            </div>
+
+            <div class="section">
+                <label>Картинки</label>
+
+                <div id="dropZone" class="dropZone">
+                    <div class="dropText">
+                        <div class="big">Перетащи изображения сюда</div>
+                        <div class="small">Изображения и видео: PNG / JPG / WEBP / GIF / MP4 / WEBM / MOV</div>
+                    </div>
+
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <button class="btn" id="pickBtn">Выбрать файлы</button>
+                        <input id="fileInput" type="file" accept="image/*,video/*" multiple />
+                    </div>
+                </div>
+
+                <div class="hintRow">
+                    <div>Поддерживаются drag&drop из проводника.</div>
+                    <div class="warn" id="warn"></div>
+                </div>
+
+                <div id="gallery" class="gallery"></div>
+
+                <!-- Публикация -->
+                <div class="section" style="padding:16px; border-top: 1px solid var(--border);">
+                    <label>Опубликовать в</label>
+
+                    <div class="publishRow">
+                        <button class="toggleBtn" id="toggleX" type="button">
+                            <span class="pillDot"></span>
+                            X
+                        </button>
+
+                        <button class="toggleBtn" id="toggleReddit" type="button">
+                            <span class="pillDot"></span>
+                            Reddit
+                        </button>
+
+                        <button class="toggleBtn" id="toggleTelegram" type="button">
+                            <span class="pillDot"></span>
+                            Telegram
+                        </button>
+
+                        <button class="toggleBtn" id="toggleTikTok" type="button">
+                            <span class="pillDot"></span>
+                            TikTok
+                        </button>
+
+                        <button class="toggleBtn" id="toggleDiscord" type="button">
+                            <span class="pillDot"></span>
+                            Discord
+                        </button>
+
+                        <button class="toggleBtn" id="toggleInstagram" type="button">
+                            <span class="pillDot"></span>
+                            Instagram
+                        </button>
+                    </div>
+
+                    <div class="publishActionRow">
+                        <div class="selectionText" id="selectionInfo">Выбрано: —</div>
+                        <button class="primaryBtn" id="publishBtn" type="button" disabled>ОПУБЛИКОВАТЬ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../renderer.js"></script>
+</body>
+
+</html>
