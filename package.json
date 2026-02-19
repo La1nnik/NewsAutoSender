@@ -12,5 +12,9 @@
     "keywords": [],
     "author": "",
     "license": "ISC",
-    "description": ""
+    "description": "",
+    "dependencies": {
+        "@google/genai": "^1.42.0",
+        "dotenv": "^17.3.1"
+    }
 }
