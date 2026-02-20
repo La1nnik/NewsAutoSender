@@ -1,5 +1,6 @@
 const { ListModelsResponse } = require("@google/genai");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { Console } = require("console");
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 require("dotenv").config();
@@ -26,8 +27,10 @@ function createWindow() {
 app.whenReady().then(() => {
     createWindow();
 
+
     app.on("activate", () => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow();
+
     });
 });
 
@@ -38,20 +41,26 @@ app.on("window-all-closed", () => {
 
 
 const apiKey = process.env.GEMINI_API_KEY;
-
 const genAI = new GoogleGenerativeAI(apiKey);
 
 async function Translate(text) {
     const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
-    const result = await model.generateContent("Translate this from Russian to English: " + text);
+    const result = await model.generateContent("Translate this from Russian to English without any explenations I want pure output: " + text);
     const response = await result.response;
+    const translatedText = response.text();
+    console.log(translatedText);
+    return translatedText;
 }
 
+ipcMain.handle("translate", async (_event, text) => {
 
-ipcMain.handle("translate", async (event, text) => {
     const translatedText = await Translate(text);
+    console.log("Returning translation:", translatedText);
     return translatedText;
+
 });
+
+
 
 async function SendPost(payload) {
     // payload = { text, media[], platforms }
@@ -77,3 +86,4 @@ ipcMain.handle("post:send", async (_event, payload) => {
     }
     return await SendPost(payload);
 });
+

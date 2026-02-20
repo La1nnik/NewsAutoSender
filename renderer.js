@@ -1,5 +1,3 @@
-const { ipcRenderer } = require("electron");
-
 const dropZone = document.getElementById("dropZone");
 const gallery = document.getElementById("gallery");
 const fileInput = document.getElementById("fileInput");
@@ -166,7 +164,7 @@ translateBtn.addEventListener("click", async (e) => {
     translateBtn.setAttribute("disabled", "disabled");
     const translatedText = await window.api.translateText(rusText.value);
     rusText.value = translatedText;
-    translateBtn.setAttribute("enables", "enabled");
+    translateBtn.removeAttribute("disabled");
 });
 
 // --- Глобально гасим дефолтное поведение drag&drop (чтобы Electron не открывал файл) ---
