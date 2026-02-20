@@ -171,10 +171,19 @@ translateBtn.addEventListener("click", async (e) => {
     if (rusText.value.length === 0) {
         rusText.setAttribute("placeholder", "Поле текста пустое, для перевода напиши что-нибудь");
         rusText.classList.add("custom-placeholder");
+        return;
     }
     translateBtn.setAttribute("disabled", "disabled");
-    // const translatedText = await window.api.translateText(rusText.value);
-    //   rusText.value = translatedText;
+    const translatedText = await window.api.translateText(rusText.value);
+    let engTextArea = document.createElement("textarea");
+    engTextArea.value = translatedText;
+
+    let engLable = document.createElement("label");
+    engLable.style.margin = "12px 0 25px 0";
+    const textNode = document.createTextNode("EN");
+    engLable.appendChild(textNode);
+    document.getElementById("textSection").appendChild(engLable);
+    document.getElementById("textSection").appendChild(engTextArea);
     translateBtn.removeAttribute("disabled");
 });
 
