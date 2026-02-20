@@ -156,14 +156,25 @@ function render() {
         gallery.appendChild(el);
     }
 }
-
+// --- Кнопка перевода --- 
 var translateBtn = document.getElementById("translateBtn");
 var rusText = document.getElementById("rusText");
 
+rusText.addEventListener("input", () => {
+    if (rusText.classList.contains("custom-placeholder")) {
+        rusText.classList.remove("custom-placeholder");
+        rusText.setAttribute("placeholder", "Напиши тут текст...");
+    }
+});
+
 translateBtn.addEventListener("click", async (e) => {
+    if (rusText.value.length === 0) {
+        rusText.setAttribute("placeholder", "Поле текста пустое, для перевода напиши что-нибудь");
+        rusText.classList.add("custom-placeholder");
+    }
     translateBtn.setAttribute("disabled", "disabled");
-    const translatedText = await window.api.translateText(rusText.value);
-    rusText.value = translatedText;
+    // const translatedText = await window.api.translateText(rusText.value);
+    //   rusText.value = translatedText;
     translateBtn.removeAttribute("disabled");
 });
 
