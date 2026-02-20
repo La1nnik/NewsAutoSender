@@ -1,6 +1,8 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { TwitterApi } = require("twitter-api-v2");
 const Snoowrap = require("snoowrap");
+const TelegramBot = require("node-telegram-bot-api");
+const fs = require("fs");
 const { Console } = require("console");
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
@@ -140,6 +142,58 @@ async function sendToReddit(payload) {
     return { id: result.name, url: result.url };
 }
 */
+
+// --- Telegram ---
+const telegramBot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN);
+const TELEGRAM_CHANNEL_ID = process.env.TELEGRAM_CHANNEL_ID;
+
+async function sendToTelegram(payload) {
+    const chatId = TELEGRAM_CHANNEL_ID;
+    const text = payload.text || "";
+    const media = (payload.media || []).filter(m => m.path);
+
+    // No media — just send text
+    if (media.length === 0) {
+        const result = await telegramBot.sendMessage(chatId, text || "(empty)");
+        console.log("Telegram text result:", result.message_id);
+        return { messageId: result.message_id };
+    }
+
+    // Single image
+    if (media.length === 1 && media[0].kind === "image") {
+        const result = await telegramBot.sendPhoto(chatId, fs.createReadStream(media[0].path), {
+            caption: text,
+        });
+        console.log("Telegram photo result:", result.message_id);
+        return { messageId: result.message_id };
+    }
+
+    // Single video
+    if (media.length === 1 && media[0].kind === "video") {
+        const result = await telegramBot.sendVideo(chatId, fs.createReadStream(media[0].path), {
+            caption: text,
+        });
+        console.log("Telegram video result:", result.message_id);
+        return { messageId: result.message_id };
+    }
+
+    // Multiple media — send as media group
+    const mediaGroup = media.map((m, i) => ({
+        type: m.kind === "video" ? "video" : "photo",
+        media: `attach://file${i}`,
+        ...(i === 0 ? { caption: text } : {}),
+    }));
+
+    const fileOptions = {};
+    media.forEach((m, i) => {
+        fileOptions[`file${i}`] = fs.createReadStream(m.path);
+    });
+
+    const result = await telegramBot.sendMediaGroup(chatId, mediaGroup, {}, fileOptions);
+    console.log("Telegram media group result:", result.length, "messages");
+    return { messageIds: result.map(r => r.message_id) };
+}
+
 async function SendPost(payload) {
     // payload = { text, media[], platforms }
     // media[] = { name, size, type, kind, path }
@@ -156,7 +210,9 @@ async function SendPost(payload) {
         // if (payload.platforms.reddit) {
         //     results.reddit = await sendToReddit(payload);
         // }
-        // if (payload.platforms.telegram) results.telegram = await sendToTelegram(payload);
+        if (payload.platforms.telegram) {
+            results.telegram = await sendToTelegram(payload);
+        }
     } catch (e) {
         console.error("SendPost error:", e);
         return { ok: false, error: e.message || String(e) };
