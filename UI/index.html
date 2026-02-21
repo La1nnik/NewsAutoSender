@@ -302,6 +302,68 @@
             background: rgba(96, 165, 250, .95);
         }
 
+        /* --- Custom radio buttons --- */
+        input[type="radio"].lang-radio {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, .18);
+            border-radius: 50%;
+            background: rgba(15, 23, 42, .55);
+            cursor: pointer;
+            transition: .15s ease;
+            position: relative;
+            margin: 0;
+            flex-shrink: 0;
+        }
+
+        input[type="radio"].lang-radio:hover {
+            border-color: rgba(96, 165, 250, .5);
+            background: rgba(96, 165, 250, .06);
+        }
+
+        input[type="radio"].lang-radio:checked {
+            border-color: rgba(96, 165, 250, .8);
+            background: rgba(96, 165, 250, .12);
+        }
+
+        input[type="radio"].lang-radio:checked::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        input[type="radio"].lang-radio:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, .2);
+        }
+
+        .lang-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            letter-spacing: .25px;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin: 0;
+            user-select: none;
+            transition: color .15s ease;
+        }
+
+        .lang-label:has(+ input:checked),
+        .lang-label.active {
+            color: var(--accent);
+        }
+
         .publishActionRow {
             margin-top: 14px;
             display: flex;
@@ -370,9 +432,9 @@
         <div class="card">
             <div class="section" id="textSection">
                 <div style="display: flex; align-items:center; justify-content: space-between; margin-bottom: 10px;">
-                    <div style="display:flex; gap:10px; align-items:center;">
-                        <label for="ru" style="margin: 0;">RU</label>
-                        <input type="radio" id="ru" name="lang" value="ru" checked style="margin: 0;"/>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <label for="ru" class="lang-label">RU</label>
+                        <input type="radio" id="ru" name="lang" value="ru" checked class="lang-radio"/>
                     </div>
                     <button class="btn" id="translateBtn">Перевести на англ</button>
                 </div>

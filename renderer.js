@@ -192,16 +192,16 @@ translateBtn.addEventListener("click", async (e) => {
 
         let engLable = document.createElement("label");
         engLable.setAttribute("for", "en");
+        engLable.className = "lang-label";
         const textNode = document.createTextNode("EN");
         engLable.appendChild(textNode);
-        engLable.style.margin = "0";
 
         let engRadio = document.createElement("input");
         engRadio.setAttribute("type", "radio");
         engRadio.setAttribute("id", "en");
         engRadio.setAttribute("name", "lang");
         engRadio.setAttribute("value", "en");
-        engRadio.style.margin = "0";
+        engRadio.className = "lang-radio";
 
         engRow.appendChild(engLable);
         engRow.appendChild(engRadio);
