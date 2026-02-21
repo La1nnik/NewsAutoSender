@@ -180,7 +180,7 @@ translateBtn.addEventListener("click", async (e) => {
 
     if (!document.getElementById("en")) {
         engTextArea = document.createElement("textarea");
-        engTextArea.setAttribute("id", "engTextArea");
+        engTextArea.setAttribute("id", "engText");
 
         let engRow = document.createElement("div");
         engRow.setAttribute("id", "engRow");
@@ -277,7 +277,8 @@ const toggleInstagram = document.getElementById("toggleInstagram");
 
 const publishBtn = document.getElementById("publishBtn");
 const selectionInfo = document.getElementById("selectionInfo");
-const textEl = document.getElementById("rusText");
+////////////////////////////////////////////////////////////////////
+
 
 const selected = {
     x: false,
@@ -317,6 +318,13 @@ toggleDiscord.addEventListener("click", () => { selected.discord = !selected.dis
 toggleInstagram.addEventListener("click", () => { selected.instagram = !selected.instagram; updatePublishUI(); });
 
 publishBtn.addEventListener("click", async () => {
+    let textEl;
+    if (document.querySelector('input[name="lang"]:checked').value === "ru") {
+        textEl = document.getElementById("rusText");
+    }
+    else {
+        textEl = document.getElementById("engText");
+    }
     const payload = {
         text: (textEl?.value || "").trim(),
         media: items.map(x => ({
