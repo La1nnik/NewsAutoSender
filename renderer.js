@@ -182,21 +182,31 @@ translateBtn.addEventListener("click", async (e) => {
         engTextArea = document.createElement("textarea");
         engTextArea.setAttribute("id", "engTextArea");
 
+        let engRow = document.createElement("div");
+        engRow.setAttribute("id", "engRow");
+        engRow.style.display = "flex";
+        engRow.style.alignItems = "center";
+        engRow.style.gap = "10px";
+        engRow.style.marginTop = "10px";
+        engRow.style.marginBottom = "20px";
+
         let engLable = document.createElement("label");
         engLable.setAttribute("for", "en");
         const textNode = document.createTextNode("EN");
         engLable.appendChild(textNode);
-        engLable.style.margin = "12px 0 8px 0";
+        engLable.style.margin = "0";
 
         let engRadio = document.createElement("input");
         engRadio.setAttribute("type", "radio");
         engRadio.setAttribute("id", "en");
         engRadio.setAttribute("name", "lang");
         engRadio.setAttribute("value", "en");
-        engRadio.style.margin = "0 0 16px 0";
+        engRadio.style.margin = "0";
 
-        document.getElementById("textSection").appendChild(engLable);
-        document.getElementById("textSection").appendChild(engRadio);
+        engRow.appendChild(engLable);
+        engRow.appendChild(engRadio);
+
+        document.getElementById("textSection").appendChild(engRow);
         document.getElementById("textSection").appendChild(engTextArea);
     } else {
         engTextArea = document.getElementById("engTextArea");
