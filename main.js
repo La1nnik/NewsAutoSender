@@ -180,16 +180,11 @@ async function sendToTelegram(payload) {
     // Multiple media — send as media group
     const mediaGroup = media.map((m, i) => ({
         type: m.kind === "video" ? "video" : "photo",
-        media: `attach://file${i}`,
+        media: fs.createReadStream(m.path),
         ...(i === 0 ? { caption: text } : {}),
     }));
 
-    const fileOptions = {};
-    media.forEach((m, i) => {
-        fileOptions[`file${i}`] = fs.createReadStream(m.path);
-    });
-
-    const result = await telegramBot.sendMediaGroup(chatId, mediaGroup, {}, fileOptions);
+    const result = await telegramBot.sendMediaGroup(chatId, mediaGroup);
     console.log("Telegram media group result:", result.length, "messages");
     return { messageIds: result.map(r => r.message_id) };
 }
