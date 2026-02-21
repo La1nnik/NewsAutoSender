@@ -67,7 +67,7 @@ ipcMain.handle("translate", async (_event, text) => {
 
 });
 
-
+/*
 // --- Twitter / X ---
 const twitterClient = new TwitterApi({
     appKey: process.env.TWITTER_API_KEY,
@@ -86,25 +86,25 @@ async function sendToTwitter(payload) {
     if (TWITTER_COMMUNITY_ID) {
         tweetBody.community_id = TWITTER_COMMUNITY_ID;
     }
-    */
-    // Upload media if any
-    if (payload.media && payload.media.length > 0) {
-        const mediaIds = [];
-        for (const m of payload.media) {
-            if (!m.path) continue;
-            const mediaId = await twitterClient.v1.uploadMedia(m.path);
-            mediaIds.push(mediaId);
-        }
-        if (mediaIds.length > 0) {
-            tweetBody.media = { media_ids: mediaIds };
-        }
+    
+// Upload media if any
+if (payload.media && payload.media.length > 0) {
+    const mediaIds = [];
+    for (const m of payload.media) {
+        if (!m.path) continue;
+        const mediaId = await twitterClient.v1.uploadMedia(m.path);
+        mediaIds.push(mediaId);
     }
-
-    const result = await twitterClient.v2.tweet(tweetBody);
-    console.log("Twitter post result:", result);
-    return result;
+    if (mediaIds.length > 0) {
+        tweetBody.media = { media_ids: mediaIds };
+    }
 }
 
+const result = await twitterClient.v2.tweet(tweetBody);
+console.log("Twitter post result:", result);
+return result;
+}
+*/
 /*
 // --- Reddit ---
 const redditClient = new Snoowrap({
@@ -204,12 +204,14 @@ async function SendPost(payload) {
     const results = {};
 
     try {
+        /*
         if (payload.platforms.x) {
             results.twitter = await sendToTwitter(payload);
         }
-        // if (payload.platforms.reddit) {
-        //     results.reddit = await sendToReddit(payload);
-        // }
+         if (payload.platforms.reddit) {
+             results.reddit = await sendToReddit(payload);
+        }
+        */
         if (payload.platforms.telegram) {
             results.telegram = await sendToTelegram(payload);
         }

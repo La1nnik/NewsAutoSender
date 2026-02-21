@@ -174,16 +174,39 @@ translateBtn.addEventListener("click", async (e) => {
         return;
     }
     translateBtn.setAttribute("disabled", "disabled");
-    const translatedText = await window.api.translateText(rusText.value);
-    let engTextArea = document.createElement("textarea");
-    engTextArea.value = translatedText;
 
-    let engLable = document.createElement("label");
-    engLable.style.margin = "12px 0 25px 0";
-    const textNode = document.createTextNode("EN");
-    engLable.appendChild(textNode);
-    document.getElementById("textSection").appendChild(engLable);
-    document.getElementById("textSection").appendChild(engTextArea);
+    // const translatedText = await window.api.translateText(rusText.value);
+    let engTextArea;
+
+    if (!document.getElementById("en")) {
+        engTextArea = document.createElement("textarea");
+        engTextArea.setAttribute("id", "engTextArea");
+
+        let engLable = document.createElement("label");
+        engLable.setAttribute("for", "en");
+        const textNode = document.createTextNode("EN");
+        engLable.appendChild(textNode);
+        engLable.style.margin = "12px 0 8px 0";
+
+        let engRadio = document.createElement("input");
+        engRadio.setAttribute("type", "radio");
+        engRadio.setAttribute("id", "en");
+        engRadio.setAttribute("name", "lang");
+        engRadio.setAttribute("value", "en");
+        engRadio.style.margin = "0 0 16px 0";
+
+        document.getElementById("textSection").appendChild(engLable);
+        document.getElementById("textSection").appendChild(engRadio);
+        document.getElementById("textSection").appendChild(engTextArea);
+    } else {
+        engTextArea = document.getElementById("engTextArea");
+    }
+
+    engTextArea.value = "test test !!!!!!!!"//translatedText;
+
+
+
+
     translateBtn.removeAttribute("disabled");
 });
 
@@ -244,7 +267,7 @@ const toggleInstagram = document.getElementById("toggleInstagram");
 
 const publishBtn = document.getElementById("publishBtn");
 const selectionInfo = document.getElementById("selectionInfo");
-const textEl = document.getElementById("text");
+const textEl = document.getElementById("rusText");
 
 const selected = {
     x: false,
