@@ -2,6 +2,7 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { TwitterApi } = require("twitter-api-v2");
 const Snoowrap = require("snoowrap");
 const TelegramBot = require("node-telegram-bot-api");
+const { Client, GatewayIntentBits, AttachmentBuilder } = require("discord.js");
 const fs = require("fs");
 const { Console } = require("console");
 const { app, BrowserWindow, ipcMain } = require("electron");
@@ -143,6 +144,45 @@ async function sendToReddit(payload) {
 }
 */
 
+// --- Discord ---
+const discordClient = new Client({ intents: [GatewayIntentBits.Guilds] });
+const DISCORD_CHANNEL_ID = process.env.DISCORD_CHANNEL_ID;
+let discordReady = false;
+
+if (process.env.DISCORD_BOT_TOKEN) {
+    discordClient.once("ready", () => {
+        console.log(`Discord bot logged in as ${discordClient.user.tag}`);
+        discordReady = true;
+    });
+    discordClient.login(process.env.DISCORD_BOT_TOKEN).catch(err => {
+        console.error("Discord login failed:", err.message);
+    });
+}
+
+async function sendToDiscord(payload) {
+    if (!discordReady) {
+        throw new Error("Discord bot is not ready or not configured");
+    }
+
+    const channel = await discordClient.channels.fetch(DISCORD_CHANNEL_ID);
+    if (!channel || !channel.isTextBased()) {
+        throw new Error("Discord channel not found or is not a text channel");
+    }
+
+    const text = payload.text || "";
+    const media = (payload.media || []).filter(m => m.path);
+
+    const files = media.map(m => new AttachmentBuilder(m.path, { name: m.name }));
+
+    const result = await channel.send({
+        content: text || undefined,
+        files: files.length > 0 ? files : undefined,
+    });
+
+    console.log("Discord post result:", result.id);
+    return { messageId: result.id, url: result.url };
+}
+
 // --- Telegram ---
 const telegramBot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN);
 const TELEGRAM_CHANNEL_ID = process.env.TELEGRAM_CHANNEL_ID;
@@ -209,6 +249,9 @@ async function SendPost(payload) {
         */
         if (payload.platforms.telegram) {
             results.telegram = await sendToTelegram(payload);
+        }
+        if (payload.platforms.discord) {
+            results.discord = await sendToDiscord(payload);
         }
     } catch (e) {
         console.error("SendPost error:", e);
