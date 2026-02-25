@@ -268,12 +268,9 @@ render();
 updateCount();
 
 // -------- Publish toggles --------
-const toggleX = document.getElementById("toggleX");
 const toggleReddit = document.getElementById("toggleReddit");
 const toggleTelegram = document.getElementById("toggleTelegram");
-const toggleTikTok = document.getElementById("toggleTikTok");
 const toggleDiscord = document.getElementById("toggleDiscord");
-const toggleInstagram = document.getElementById("toggleInstagram");
 
 const publishBtn = document.getElementById("publishBtn");
 const selectionInfo = document.getElementById("selectionInfo");
@@ -281,41 +278,29 @@ const selectionInfo = document.getElementById("selectionInfo");
 
 
 const selected = {
-    x: false,
     reddit: false,
     telegram: false,
-    tiktok: false,
-    discord: false,
-    instagram: false
+    discord: false
 };
 
 function updatePublishUI() {
-    toggleX.classList.toggle("active", selected.x);
     toggleReddit.classList.toggle("active", selected.reddit);
     toggleTelegram.classList.toggle("active", selected.telegram);
-    toggleTikTok.classList.toggle("active", selected.tiktok);
     toggleDiscord.classList.toggle("active", selected.discord);
-    toggleInstagram.classList.toggle("active", selected.instagram);
 
     const list = [];
-    if (selected.x) list.push("X");
     if (selected.reddit) list.push("Reddit");
     if (selected.telegram) list.push("Telegram");
-    if (selected.tiktok) list.push("TikTok");
     if (selected.discord) list.push("Discord");
-    if (selected.instagram) list.push("Instagram");
 
     selectionInfo.textContent = `Выбрано: ${list.length ? list.join(", ") : "—"}`;
 
     publishBtn.disabled = list.length === 0;
 }
 
-toggleX.addEventListener("click", () => { selected.x = !selected.x; updatePublishUI(); });
 toggleReddit.addEventListener("click", () => { selected.reddit = !selected.reddit; updatePublishUI(); });
 toggleTelegram.addEventListener("click", () => { selected.telegram = !selected.telegram; updatePublishUI(); });
-toggleTikTok.addEventListener("click", () => { selected.tiktok = !selected.tiktok; updatePublishUI(); });
 toggleDiscord.addEventListener("click", () => { selected.discord = !selected.discord; updatePublishUI(); });
-toggleInstagram.addEventListener("click", () => { selected.instagram = !selected.instagram; updatePublishUI(); });
 
 publishBtn.addEventListener("click", async () => {
     let textEl;
@@ -335,12 +320,9 @@ publishBtn.addEventListener("click", async () => {
             path: x.path // <-- путь файла для будущей отправки в API
         })),
         platforms: {
-            x: selected.x,
             reddit: selected.reddit,
             telegram: selected.telegram,
-            tiktok: selected.tiktok,
-            discord: selected.discord,
-            instagram: selected.instagram
+            discord: selected.discord
         }
     };
 

@@ -1,5 +1,4 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-const { TwitterApi } = require("twitter-api-v2");
 const Snoowrap = require("snoowrap");
 const TelegramBot = require("node-telegram-bot-api");
 const { Client, GatewayIntentBits, AttachmentBuilder } = require("discord.js");
@@ -68,44 +67,7 @@ ipcMain.handle("translate", async (_event, text) => {
 
 });
 
-/*
-// --- Twitter / X ---
-const twitterClient = new TwitterApi({
-    appKey: process.env.TWITTER_API_KEY,
-    appSecret: process.env.TWITTER_API_SECRET,
-    accessToken: process.env.TWITTER_ACCESS_TOKEN,
-    accessSecret: process.env.TWITTER_ACCESS_SECRET,
-});
 
-const TWITTER_COMMUNITY_ID = process.env.TWITTER_COMMUNITY_ID;
-
-async function sendToTwitter(payload) {
-    const tweetBody = { text: payload.text };
-
-    /*
-    // Post to community if ID is set
-    if (TWITTER_COMMUNITY_ID) {
-        tweetBody.community_id = TWITTER_COMMUNITY_ID;
-    }
-    
-// Upload media if any
-if (payload.media && payload.media.length > 0) {
-    const mediaIds = [];
-    for (const m of payload.media) {
-        if (!m.path) continue;
-        const mediaId = await twitterClient.v1.uploadMedia(m.path);
-        mediaIds.push(mediaId);
-    }
-    if (mediaIds.length > 0) {
-        tweetBody.media = { media_ids: mediaIds };
-    }
-}
-
-const result = await twitterClient.v2.tweet(tweetBody);
-console.log("Twitter post result:", result);
-return result;
-}
-*/
 /*
 // --- Reddit ---
 const redditClient = new Snoowrap({
@@ -239,14 +201,7 @@ async function SendPost(payload) {
     const results = {};
 
     try {
-        /*
-        if (payload.platforms.x) {
-            results.twitter = await sendToTwitter(payload);
-        }
-         if (payload.platforms.reddit) {
-             results.reddit = await sendToReddit(payload);
-        }
-        */
+
         if (payload.platforms.telegram) {
             results.telegram = await sendToTelegram(payload);
         }
