@@ -175,7 +175,7 @@ translateBtn.addEventListener("click", async (e) => {
     }
     translateBtn.setAttribute("disabled", "disabled");
 
-    // const translatedText = await window.api.translateText(rusText.value);
+    const translatedText = await window.api.translateText(rusText.value);
     let engTextArea;
 
     if (!document.getElementById("en")) {
