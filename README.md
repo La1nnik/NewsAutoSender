@@ -79,19 +79,6 @@ npm start
 
 ---
 
-## Project Structure
-
-```
-NewsAutoSender/
-├── main.js          # Electron main process: window creation, Gemini AI, Telegram & Discord APIs
-├── preload.js       # Context bridge exposing IPC methods to the renderer
-├── renderer.js      # Frontend logic: media handling, translation UI, publishing flow
-├── UI/
-│   └── index.html   # Application UI (HTML + CSS)
-├── .env             # Environment variables (not committed)
-├── package.json     # Dependencies and scripts
-└── README.md
-```
 
 ---
 
