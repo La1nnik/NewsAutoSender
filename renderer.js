@@ -7,7 +7,7 @@ const warnEl = document.getElementById("warn");
 
 // items: { id, key, kind: "image"|"video", name, size, type, url }
 const items = [];
-const seen = new Set(); // дедуп по name+size+lastModified
+const seen = new Set(); // dedup by name+size+lastModified
 
 function formatBytes(bytes) {
     const units = ["B", "KB", "MB", "GB"];
@@ -25,7 +25,7 @@ function setWarn(msg) {
 }
 
 function updateCount() {
-    // в UI у тебя написано "Добавлено:" — оставим, но считаем файлы
+    // count attached files
     countEl.textContent = String(items.length);
 }
 
@@ -82,8 +82,8 @@ function addFiles(fileList) {
     updateCount();
 
     if (skipped > 0) {
-        const reason = skippedNotSupported > 0 ? "неподдерживаемый тип или уже добавлено" : "уже добавлено";
-        setWarn(`Пропущено: ${skipped} (${reason})`);
+        const reason = skippedNotSupported > 0 ? "unsupported type or already added" : "already added";
+        setWarn(`Skipped: ${skipped} (${reason})`);
     }
 }
 
@@ -145,7 +145,7 @@ function render() {
 
         const rm = document.createElement("button");
         rm.className = "remove";
-        rm.title = "Удалить";
+        rm.title = "Remove";
         rm.innerHTML = "✕";
         rm.addEventListener("click", () => removeItem(it.id));
 
@@ -156,20 +156,20 @@ function render() {
         gallery.appendChild(el);
     }
 }
-// --- Кнопка перевода --- 
+// --- Translation button ---
 var translateBtn = document.getElementById("translateBtn");
 var rusText = document.getElementById("rusText");
 
 rusText.addEventListener("input", () => {
     if (rusText.classList.contains("custom-placeholder")) {
         rusText.classList.remove("custom-placeholder");
-        rusText.setAttribute("placeholder", "Напиши тут текст...");
+        rusText.setAttribute("placeholder", "Write your text here...");
     }
 });
 
 translateBtn.addEventListener("click", async (e) => {
     if (rusText.value.length === 0) {
-        rusText.setAttribute("placeholder", "Поле текста пустое, для перевода напиши что-нибудь");
+        rusText.setAttribute("placeholder", "Text field is empty, write something to translate");
         rusText.classList.add("custom-placeholder");
         return;
     }
@@ -220,11 +220,11 @@ translateBtn.addEventListener("click", async (e) => {
     translateBtn.removeAttribute("disabled");
 });
 
-// --- Глобально гасим дефолтное поведение drag&drop (чтобы Electron не открывал файл) ---
+// --- Disable default drag&drop behavior globally (prevent Electron from opening the file) ---
 document.addEventListener("dragover", (e) => e.preventDefault());
 document.addEventListener("drop", (e) => e.preventDefault());
 
-// ---------- Drag & Drop (локально подсветка) ----------
+// ---------- Drag & Drop (local highlight) ----------
 dropZone.addEventListener("dragenter", (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -289,7 +289,7 @@ function updatePublishUI() {
     if (selected.telegram) list.push("Telegram");
     if (selected.discord) list.push("Discord");
 
-    selectionInfo.textContent = `Выбрано: ${list.length ? list.join(", ") : "—"}`;
+    selectionInfo.textContent = `Selected: ${list.length ? list.join(", ") : "—"}`;
 
     publishBtn.disabled = list.length === 0;
 }
@@ -320,31 +320,31 @@ publishBtn.addEventListener("click", async () => {
         }
     };
 
-    // Мини-проверка: пути реально есть
+    // Basic check: paths actually exist
     const missingPaths = payload.media.filter(m => !m.path).length;
     if (missingPaths > 0) {
-        setWarn(`⚠️ Внимание: у ${missingPaths} файлов нет path. (Такое бывает, если файл не из проводника).`);
+        setWarn(`⚠️ Warning: ${missingPaths} file(s) have no path. (This can happen if the file wasn't added from the file explorer).`);
     }
 
     try {
-        setWarn("Отправляю в main.js (SendPost)...");
+        setWarn("Sending to main.js (SendPost)...");
         publishBtn.disabled = true;
 
         const res = await window.api.sendPost(payload);
 
         if (res?.ok) {
-            setWarn("✅ SendPost: успешно принято в main.js (демо).");
+            setWarn("✅ SendPost: successfully received in main.js.");
             console.log("SendPost response:", res);
         } else {
-            setWarn(`❌ SendPost: ошибка: ${res?.error || "unknown"}`);
+            setWarn(`❌ SendPost: error: ${res?.error || "unknown"}`);
             console.error("SendPost error:", res);
         }
     } catch (e) {
-        setWarn(`❌ SendPost: исключение: ${e?.message || e}`);
+        setWarn(`❌ SendPost: exception: ${e?.message || e}`);
         console.error(e);
     } finally {
         publishBtn.disabled = false;
-        updatePublishUI(); // вернём правильное состояние disabled по выбранным платформам
+        updatePublishUI(); // restore correct disabled state based on selected platforms
     }
 });
 

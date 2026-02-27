@@ -13,7 +13,7 @@ function createWindow() {
     const win = new BrowserWindow({
         width: 1000,
         height: 700,
-        show: false, // покажем после готовности — меньше мерцания
+        show: false, // show after ready — less flickering
         webPreferences: {
             preload: path.join(__dirname, "preload.js"),
             contextIsolation: true,
@@ -37,7 +37,7 @@ app.whenReady().then(() => {
 });
 
 app.on("window-all-closed", () => {
-    // на macOS обычно приложение не закрывается полностью
+    // on macOS the app usually doesn't quit completely
     if (process.platform !== "darwin") app.quit();
 })
 
@@ -116,7 +116,7 @@ async function sendToTelegram(payload) {
     const text = payload.text || "";
     const media = (payload.media || []).filter(m => m.path);
 
-    // No media just send text
+    // No media — just send text
     if (media.length === 0) {
         const result = await telegramBot.sendMessage(chatId, text || "(empty)");
         console.log("Telegram text result:", result.message_id);
@@ -155,7 +155,7 @@ async function sendToTelegram(payload) {
 
 async function SendPost(payload) {
     // payload = { text, media[], platforms }
-    // media[] = { name, size, type, kind, path }
+    // media item = { name, size, type, kind, path }
 
     console.log("=== SendPost called ===");
     console.log(JSON.stringify(payload, null, 2));
@@ -177,9 +177,9 @@ async function SendPost(payload) {
     return { ok: true, results };
 }
 
-// IPC handler: renderer to main
+// IPC handler: renderer -> main
 ipcMain.handle("post:send", async (_event, payload) => {
-    // Мини-валидация
+    // Basic validation
     if (!payload || typeof payload !== "object") {
         return { ok: false, error: "Invalid payload" };
     }

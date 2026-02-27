@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8" />
@@ -423,10 +423,10 @@
     <div class="wrap">
         <div class="header">
             <div>
-                <h1 class="title">Заметка + изображения</h1>
-                <p class="subtitle">Пиши текст сверху. Картинки - перетащи в блок ниже.</p>
+                <h1 class="title">Note + Images</h1>
+                <p class="subtitle">Write text above. Drag images into the block below.</p>
             </div>
-            <div class="countPill">Добавлено: <b id="count">0</b></div>
+            <div class="countPill">Added: <b id="count">0</b></div>
         </div>
 
         <div class="card">
@@ -436,38 +436,38 @@
                         <label for="ru" class="lang-label">RU</label>
                         <input type="radio" id="ru" name="lang" value="ru" checked class="lang-radio"/>
                     </div>
-                    <button class="btn" id="translateBtn">Перевести на англ</button>
+                    <button class="btn" id="translateBtn">Translate to English</button>
                 </div>
 
                 
-                <textarea id="rusText" placeholder="Напиши тут текст..." style = "margin-bottom: 10px;"></textarea>
+                <textarea id="rusText" placeholder="Write your text here..." style = "margin-bottom: 10px;"></textarea>
             </div>
 
             <div class="section">
-                <label>Картинки</label>
+                <label>Images</label>
 
                 <div id="dropZone" class="dropZone">
                     <div class="dropText">
-                        <div class="big">Перетащи изображения сюда</div>
-                        <div class="small">Изображения и видео: PNG / JPG / WEBP / GIF / MP4 / WEBM / MOV</div>
+                        <div class="big">Drag images here</div>
+                        <div class="small">Images and videos: PNG / JPG / WEBP / GIF / MP4 / WEBM / MOV</div>
                     </div>
 
                     <div style="display:flex; gap:10px; align-items:center;">
-                        <button class="btn" id="pickBtn">Выбрать файлы</button>
+                        <button class="btn" id="pickBtn">Choose files</button>
                         <input id="fileInput" type="file" accept="image/*,video/*" multiple />
                     </div>
                 </div>
 
                 <div class="hintRow">
-                    <div>Поддерживаются drag&drop из проводника.</div>
+                    <div>Drag & drop from file explorer is supported.</div>
                     <div class="warn" id="warn"></div>
                 </div>
 
                 <div id="gallery" class="gallery"></div>
 
-                <!-- Публикация -->
+                <!-- Publishing -->
                 <div class="section" style="padding:16px; border-top: 1px solid var(--border);">
-                    <label>Опубликовать в</label>
+                    <label>Publish to</label>
 
                     <div class="publishRow">
                         <button class="toggleBtn" id="toggleTelegram" type="button">
@@ -482,8 +482,8 @@
                     </div>
 
                     <div class="publishActionRow">
-                        <div class="selectionText" id="selectionInfo">Выбрано: —</div>
-                        <button class="primaryBtn" id="publishBtn" type="button" disabled>ОПУБЛИКОВАТЬ</button>
+                        <div class="selectionText" id="selectionInfo">Selected: -</div>
+                        <button class="primaryBtn" id="publishBtn" type="button" disabled>PUBLISH</button>
                     </div>
                 </div>
             </div>

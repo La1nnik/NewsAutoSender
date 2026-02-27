@@ -5,6 +5,6 @@ contextBridge.exposeInMainWorld("api", {
 
     translateText: (text) => ipcRenderer.invoke("translate", text),
 
-    // Отправка поста в main.js (SendPost)
+    // Send post to main.js (SendPost)
     sendPost: (payload) => ipcRenderer.invoke("post:send", payload)
 });
