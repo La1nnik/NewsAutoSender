@@ -1,5 +1,4 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-const Snoowrap = require("snoowrap");
 const TelegramBot = require("node-telegram-bot-api");
 const { Client, GatewayIntentBits, AttachmentBuilder } = require("discord.js");
 const fs = require("fs");
@@ -68,43 +67,6 @@ ipcMain.handle("translate", async (_event, text) => {
 });
 
 
-/*
-// --- Reddit ---
-const redditClient = new Snoowrap({
-    userAgent: "NewsAutoSender/1.0.0",
-    clientId: process.env.REDDIT_CLIENT_ID,
-    clientSecret: process.env.REDDIT_CLIENT_SECRET,
-    username: process.env.REDDIT_USERNAME,
-    password: process.env.REDDIT_PASSWORD,
-});
-
-const REDDIT_SUBREDDIT = process.env.REDDIT_SUBREDDIT;
-
-async function sendToReddit(payload) {
-    const subreddit = redditClient.getSubreddit(REDDIT_SUBREDDIT);
-
-    let result;
-
-    // If there are images, submit as a link post with the first image
-    if (payload.media && payload.media.length > 0 && payload.media[0].path) {
-        // Reddit API doesn't support direct image upload via snoowrap,
-        // so we submit a self post with text
-        result = await subreddit.submitSelfpost({
-            title: payload.text.substring(0, 300) || "New Post",
-            text: payload.text,
-        });
-    } else {
-        // Text-only post
-        result = await subreddit.submitSelfpost({
-            title: payload.text.substring(0, 300) || "New Post",
-            text: payload.text,
-        });
-    }
-
-    console.log("Reddit post result:", result.name);
-    return { id: result.name, url: result.url };
-}
-*/
 
 // --- Discord ---
 const discordClient = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -154,7 +116,7 @@ async function sendToTelegram(payload) {
     const text = payload.text || "";
     const media = (payload.media || []).filter(m => m.path);
 
-    // No media — just send text
+    // No media just send text
     if (media.length === 0) {
         const result = await telegramBot.sendMessage(chatId, text || "(empty)");
         console.log("Telegram text result:", result.message_id);
@@ -179,7 +141,7 @@ async function sendToTelegram(payload) {
         return { messageId: result.message_id };
     }
 
-    // Multiple media — send as media group
+    // Multiple media
     const mediaGroup = media.map((m, i) => ({
         type: m.kind === "video" ? "video" : "photo",
         media: fs.createReadStream(m.path),
@@ -201,7 +163,6 @@ async function SendPost(payload) {
     const results = {};
 
     try {
-
         if (payload.platforms.telegram) {
             results.telegram = await sendToTelegram(payload);
         }
@@ -216,7 +177,7 @@ async function SendPost(payload) {
     return { ok: true, results };
 }
 
-// IPC handler: renderer -> main
+// IPC handler: renderer to main
 ipcMain.handle("post:send", async (_event, payload) => {
     // Мини-валидация
     if (!payload || typeof payload !== "object") {

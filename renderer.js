@@ -268,7 +268,6 @@ render();
 updateCount();
 
 // -------- Publish toggles --------
-const toggleReddit = document.getElementById("toggleReddit");
 const toggleTelegram = document.getElementById("toggleTelegram");
 const toggleDiscord = document.getElementById("toggleDiscord");
 
@@ -278,18 +277,15 @@ const selectionInfo = document.getElementById("selectionInfo");
 
 
 const selected = {
-    reddit: false,
     telegram: false,
     discord: false
 };
 
 function updatePublishUI() {
-    toggleReddit.classList.toggle("active", selected.reddit);
     toggleTelegram.classList.toggle("active", selected.telegram);
     toggleDiscord.classList.toggle("active", selected.discord);
 
     const list = [];
-    if (selected.reddit) list.push("Reddit");
     if (selected.telegram) list.push("Telegram");
     if (selected.discord) list.push("Discord");
 
@@ -298,7 +294,6 @@ function updatePublishUI() {
     publishBtn.disabled = list.length === 0;
 }
 
-toggleReddit.addEventListener("click", () => { selected.reddit = !selected.reddit; updatePublishUI(); });
 toggleTelegram.addEventListener("click", () => { selected.telegram = !selected.telegram; updatePublishUI(); });
 toggleDiscord.addEventListener("click", () => { selected.discord = !selected.discord; updatePublishUI(); });
 
@@ -320,7 +315,6 @@ publishBtn.addEventListener("click", async () => {
             path: x.path // <-- путь файла для будущей отправки в API
         })),
         platforms: {
-            reddit: selected.reddit,
             telegram: selected.telegram,
             discord: selected.discord
         }
